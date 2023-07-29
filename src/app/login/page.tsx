@@ -1,22 +1,49 @@
 "use client";
 
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { axios } from "axios";
+import axios  from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import logo from "../assets/HealthSynx.png";
+import { toast } from "react-hot-toast";
 
 interface pageProps {}
 
 const LoginPage: FC<pageProps> = ({}) => {
+  const router = useRouter();
   const [user, setUser] = React.useState({
     email: "",
     password: "",
   });
+  const [buttonDisabled, setButtonDisabled] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
-  const onLogin = async () => {};
+  const onLogin = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.post('/api/users/login', user);
+      console.log("Log in success", response.data);
+      toast.success("Log in successful!");
+      router.push(`/profile/${user.email}`)
+    } catch (error: any) {
+      console.log("Login failed", error.message);
+      toast.error(error.message);
+    }finally{
+      setLoading(false)
+    }
+  };
+
+  useEffect(() => {
+    if(user.email.length > 0  && user.password.length > 0 ){
+      setButtonDisabled(false);
+    } else{
+      setButtonDisabled(true);
+    }
+  
+    
+  }, [user])
   
   return (
     <div className="max-w-full max-h-full absolute top-0 left-0 right-0 bottom-0">
@@ -93,13 +120,18 @@ const LoginPage: FC<pageProps> = ({}) => {
             </div>
 
             <div>
-              <button
-                type="submit"
-                className="flex w-full justify-center rounded-md bg-gray-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 transition-colors duration-200"
-                onClick={onLogin}
-              >
-                Log in
-              </button>
+            <button
+              type="submit"
+              className={`flex w-full justify-center rounded-md bg-gray-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 transition-colors duration-200 ${buttonDisabled ? "cursor-not-allowed disabled:hover:bg-gray-600":""}`}
+              onClick={onLogin}
+            >
+              Log in
+              {loading && (
+                  <span>
+                     ...
+                  </span>
+                )}
+            </button>
             </div>
           </form>
 
