@@ -9,8 +9,6 @@ import Image from "next/image";
 import Link from "next/link";
 import logo from "../assets/HealthSynx.png";
 import rhombus from "@/app/assets/Rhombus.gif";
-import { spawn } from "child_process";
-
 interface pageProps {}
 
 const Signup: FC<pageProps> = ({}) => {

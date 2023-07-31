@@ -31,11 +31,11 @@ export async function POST(request: NextRequest) {
     const tokenData = {
       id: user._id,
       username: user.username,
-      email: user.email,
+      email: user.email
     };
 
     //create token
-    const token = await jwt.sign(tokenData, process.env.JWT_SECRET_KEY!, {
+    const token = jwt.sign(tokenData, process.env.JWT_SECRET_KEY!, {
       expiresIn: "1h",
     });
 

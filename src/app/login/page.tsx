@@ -26,7 +26,7 @@ const LoginPage: FC<pageProps> = ({}) => {
       const response = await axios.post('/api/users/login', user);
       console.log("Log in success", response.data);
       toast.success("Log in successful!");
-      router.push(`/profile/${user.email}`)
+      router.push(`/profile/${user.email.split("@")[0]}`)
     } catch (error: any) {
       console.log("Login failed", error.message);
       toast.error(error.message);
